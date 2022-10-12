@@ -8,7 +8,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,15 +18,16 @@ import com.example.algamoney.api.repository.UsuarioRepository;
 
 @Service
 public class AppUserDetailsService implements UserDetailsService {
-
+	
 	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private UsuarioRepository UsuarioRepository;
 	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
-		Usuario usuario = usuarioOptional.orElseThrow(() -> new UsernameNotFoundException("Usuário e/ou senha incorretos"));
-		return new User(email, usuario.getSenha(), getPermissoes(usuario));
+		Optional<Usuario> usuarioOptional = UsuarioRepository.findByEmail(email);
+		Usuario usuario = usuarioOptional.orElseThrow(() -> new UsernameNotFoundException("Usuario e/ou senha incorretos"));
+		return new UsuarioSistema(usuario, getPermissoes(usuario));
+
 	}
 
 	private Collection<? extends GrantedAuthority> getPermissoes(Usuario usuario) {
@@ -35,4 +35,5 @@ public class AppUserDetailsService implements UserDetailsService {
 		usuario.getPermissoes().forEach(p -> authorities.add(new SimpleGrantedAuthority(p.getDescricao().toUpperCase())));
 		return authorities;
 	}
+
 }

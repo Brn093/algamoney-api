@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AlgamoneyApiProperty {
 	
-	private String originPermitida = "http://localhost:8000";
+	private String originPermitida = "http://localhost:8080";
 	
 	private final Seguranca seguranca = new Seguranca();
 	

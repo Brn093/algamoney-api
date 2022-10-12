@@ -26,7 +26,7 @@ public class PessoaService {
 			throw new EmptyResultDataAccessException(1);
 		}
 		return pessoaSalva;
-	}
+	}	
 
 	public void atualizarPropriedadeAtivo(Long id, Boolean ativo) {
 		Pessoa pessoaSalva = buscarPessoaPeloId(id);

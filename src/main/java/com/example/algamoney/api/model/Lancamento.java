@@ -24,10 +24,10 @@ public class Lancamento {
 	
 	private String descricao;
 	
-	@Column(name = "data_vencimento")
+	@Column(name = "data_vencimento")	
 	private LocalDate dataVencimento;
 	
-	@Column(name = "data_pagamento")
+	@Column(name = "data_pagamento")	
 	private LocalDate dataPagamento;
 	
 	private BigDecimal valor;
