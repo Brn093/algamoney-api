@@ -1,18 +1,31 @@
 package com.example.algamoney.api.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.repository.PessoaRepository;
+import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
 
 @Service
 public class PessoaService {
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	public Pessoa salvar(Pessoa pessoa) {
+		Optional<Pessoa> pessoa1 = pessoaRepository.findById(pessoa.getId());
+
+        if(pessoa1.isEmpty()) {
+            throw new PessoaInexistenteOuInativaException();
+        }
+        return pessoaRepository.save(pessoa);
+	}
 	
 	public Pessoa atualizar(Long id, Pessoa pessoa) {
 		Pessoa pessoaSalva = buscarPessoaPeloId(id);

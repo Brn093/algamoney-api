@@ -71,7 +71,7 @@ public class LancamentoResource {
 		Lancamento lancamentoSalvo = lancamentoService.salvar(lancamento);
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getId()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
-	}
+	}	
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
