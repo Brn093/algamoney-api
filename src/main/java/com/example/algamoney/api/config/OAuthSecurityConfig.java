@@ -18,9 +18,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @SuppressWarnings("deprecation")
 @Profile("oauth-security")
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableAuthorizationServer
-@EnableResourceServer
 public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 	// Autenticação em memória -https://blog.algaworks.com/spring-security/
 	@Autowired

@@ -14,5 +14,5 @@ import com.example.algamoney.api.model.Pessoa;
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 	public Page<Pessoa> findByNomeContaining(String nome, Pageable pageable);
 	
-	Pessoa save(Optional<Pessoa> pessoaSalva);
+	//Pessoa save(Optional<Pessoa> pessoaSalva);
 }
