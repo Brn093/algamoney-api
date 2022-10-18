@@ -14,52 +14,50 @@ import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaExc
 
 @Service
 public class LancamentoService {
-	
+
 	@Autowired
 	private PessoaRepository pessoaRepository;
-	
+
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
-	
+
 	public Lancamento salvar(Lancamento lancamento) {
 		Optional<Pessoa> pessoa = pessoaRepository.findById(lancamento.getPessoa().getId());
 
-        if(pessoa.isEmpty()) {
-            throw new PessoaInexistenteOuInativaException();
-        }
-        return lancamentoRepository.save(lancamento);
+		if (pessoa.isEmpty()) {
+			throw new PessoaInexistenteOuInativaException();
+		}
+		return lancamentoRepository.save(lancamento);
 	}
-	
-	@SuppressWarnings("unlikely-arg-type")
+
 	public Lancamento atualizar(Long id, Lancamento lancamento) {
-		Optional<Lancamento> lancamentoSalvo = buscarLancamentoExistente(id);
-		if(!lancamento.getPessoa().equals(lancamentoSalvo)) {
+		Lancamento lancamentoSalvo = buscarLancamentoExistente(id);
+		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
 			validarPessoa(lancamento);
 		}
-		
+
 		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "id");
-		
+
 		return lancamentoRepository.save(lancamentoSalvo);
 	}
-	
-	private void validarPessoa(Lancamento lancamento) {
-		Optional<Pessoa> pessoa = null;  
-		if(lancamento.getPessoa().getId() != null) {
-			pessoa = pessoaRepository.findById(lancamento.getPessoa().getId());
-		}
-		
-		if(pessoa == null || pessoa.isPresent()) {
+
+	public void validarPessoa(Lancamento lancamento) {
+		Pessoa pessoa = lancamento.getPessoa();
+		if (pessoa == null || pessoa.getId() == null)
 			throw new PessoaInexistenteOuInativaException();
-		}	
+
+		Optional<Pessoa> pessoaOptional = pessoaRepository.findById(pessoa.getId());
+
+		if (pessoaOptional.isEmpty())
+			throw new PessoaInexistenteOuInativaException();
 	}
-	
-	
-	private Optional<Lancamento> buscarLancamentoExistente(Long id) {
+
+	public Lancamento buscarLancamentoExistente(Long id) {
 		Optional<Lancamento> lancamentoSalvo = lancamentoRepository.findById(id);
-		if(lancamentoSalvo == null) {
+		if (lancamentoSalvo.isEmpty()) {
 			throw new IllegalArgumentException();
 		}
-		
-		return lancamentoSalvo;
+
+		return lancamentoSalvo.get();
 	}
 }

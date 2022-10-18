@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -96,12 +97,14 @@ public class LancamentoResource {
 	
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
-	public ResponseEntity<Lancamento> atualizar(@PathVariable Long id, @Valid @RequestBody Lancamento lancamento) {
-		try {
-			Lancamento lancamentoSalvo = lancamentoService.atualizar(id, lancamento);
-			return ResponseEntity.ok(lancamentoSalvo);
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.notFound().build();
+	public Lancamento atualizar(@PathVariable Long id, @Valid @RequestBody Lancamento lancamento) {
+		Lancamento lancamentoSalvo = lancamentoService.buscarLancamentoExistente(id);
+		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
+			lancamentoService.validarPessoa(lancamento);
 		}
-	}
+
+		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "id");
+
+		return lancamentoRepository.save(lancamentoSalvo);
+	}	
 }
