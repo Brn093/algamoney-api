@@ -21,7 +21,7 @@ public class PessoaService {
 	public Pessoa salvar(Pessoa pessoa) {
 		Optional<Pessoa> pessoa1 = pessoaRepository.findById(pessoa.getId());
 
-        if(pessoa1.isEmpty()) {
+        if(pessoa1.equals(null)) {
             throw new PessoaInexistenteOuInativaException();
         }
         return pessoaRepository.save(pessoa);

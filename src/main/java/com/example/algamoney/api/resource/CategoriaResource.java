@@ -25,32 +25,35 @@ import com.example.algamoney.api.repository.CategoriaRepository;
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaResource {
-	
-	@Autowired
-	private CategoriaRepository categoriaRepository;
-	
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
 	@Autowired
 	private ApplicationEventPublisher publisher;
-	
-	@GetMapping
-    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
-	public List<Categoria> listar() {
-		return categoriaRepository.findAll();
-	}	
-	
+    
+    @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and hasAuthority('SCOPE_read')" )
+    public List<Categoria> listar() {
+        return categoriaRepository.findAll();
+    }
+    	
 	@PostMapping
-    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and hasAuthority('SCOPE_write')")
 	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
 		Categoria categoriaSalva = categoriaRepository.save(categoria);
 		
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getId()));
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
 	}
-	
-	@GetMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
-	public ResponseEntity<?> buscarPorId(@PathVariable Long id) {	
-		Optional<Categoria> categoria = categoriaRepository.findById(id);
-		return !categoria.isEmpty() ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
-	}
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and hasAuthority('SCOPE_read')")
+    public ResponseEntity<Categoria> buscarPeloId(@PathVariable Long id) {
+        Optional<Categoria> categoria = categoriaRepository.findById(id);
+
+        return categoria.isPresent() ? ResponseEntity.ok(categoria.get()) : ResponseEntity.notFound().build();
+    }
+    
 }

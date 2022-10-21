@@ -18,7 +18,7 @@ public class TokenResource {
 	
 	@Autowired
 	private AlgamoneyApiProperty algamoneyApiProperty;
-	
+
 	@DeleteMapping("/revoke")
 	public void revoke(HttpServletRequest req, HttpServletResponse resp) {
 		Cookie cookie = new Cookie("refreshToken", null);
@@ -30,4 +30,5 @@ public class TokenResource {
 		resp.addCookie(cookie);
 		resp.setStatus(HttpStatus.NO_CONTENT.value());
 	}
+	
 }

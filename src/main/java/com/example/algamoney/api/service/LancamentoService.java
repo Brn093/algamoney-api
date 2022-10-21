@@ -14,19 +14,19 @@ import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaExc
 
 @Service
 public class LancamentoService {
-
+	
 	@Autowired
 	private PessoaRepository pessoaRepository;
-
-	@Autowired
+	
+	@Autowired 
 	private LancamentoRepository lancamentoRepository;
 
 	public Lancamento salvar(Lancamento lancamento) {
 		Optional<Pessoa> pessoa = pessoaRepository.findById(lancamento.getPessoa().getId());
-
-		if (pessoa.isEmpty()) {
+		if (pessoa.equals(null) || pessoa.get().isInativo()) {
 			throw new PessoaInexistenteOuInativaException();
 		}
+		
 		return lancamentoRepository.save(lancamento);
 	}
 
@@ -41,23 +41,23 @@ public class LancamentoService {
 		return lancamentoRepository.save(lancamentoSalvo);
 	}
 
-	public void validarPessoa(Lancamento lancamento) {
-		Pessoa pessoa = lancamento.getPessoa();
-		if (pessoa == null || pessoa.getId() == null)
-			throw new PessoaInexistenteOuInativaException();
-
-		Optional<Pessoa> pessoaOptional = pessoaRepository.findById(pessoa.getId());
-
-		if (pessoaOptional.isEmpty())
-			throw new PessoaInexistenteOuInativaException();
-	}
-
-	public Lancamento buscarLancamentoExistente(Long id) {
-		Optional<Lancamento> lancamentoSalvo = lancamentoRepository.findById(id);
-		if (lancamentoSalvo.isEmpty()) {
-			throw new IllegalArgumentException();
+	private void validarPessoa(Lancamento lancamento) {
+		Optional<Pessoa> pessoa = null;
+		if (lancamento.getPessoa().getId() != null) {
+			pessoa = pessoaRepository.findById(lancamento.getPessoa().getId());
 		}
 
-		return lancamentoSalvo.get();
+		if (pessoa.equals(null) || pessoa.get().isInativo()) {
+			throw new PessoaInexistenteOuInativaException();
+		}
 	}
+
+	private Lancamento buscarLancamentoExistente(Long id) {
+/* 		Optional<Lancamento> lancamentoSalvo = lancamentoRepository.findById(id);
+		if (lancamentoSalvo.isEmpty()) {
+			throw new IllegalArgumentException();
+		} */
+		return lancamentoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+	}	
+	
 }
