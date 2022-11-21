@@ -8,7 +8,7 @@
 		<![CDATA[]]>
 	</queryString>
 	<field name="tipo" class="com.example.algamoney.api.model.TipoLancamento"/>
-	<field name="total" class="java.lang.Integer"/>
+	<field name="total" class="java.math.BigDecimal"/>
 	<field name="pessoa" class="com.example.algamoney.api.model.Pessoa"/>
 	<title>
 		<band height="60" splitType="Stretch">
