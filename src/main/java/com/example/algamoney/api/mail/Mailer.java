@@ -7,8 +7,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+//import org.springframework.boot.context.event.ApplicationReadyEvent;
+//import org.springframework.context.event.EventListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -19,12 +19,12 @@ public class Mailer {
 	@Autowired
 	private JavaMailSender mailSender;
 
-	@EventListener
-	public void teste(ApplicationReadyEvent event) {
-		this.enviarEmail("brunofreitas.93@hotmail.com", Arrays.asList("brunofreitas.93@hotmail.com"), 
-					"Testando", "Olá!<br/>Teste ok!");
-		System.out.println("Terminado o envio de e-mail!");
-	}
+//	@EventListener
+//	public void teste(ApplicationReadyEvent event) {
+//		this.enviarEmail("brunofreitas.93@hotmail.com", Arrays.asList("brunofreitas.93@hotmail.com"), 
+//					"Testando", "Olá!<br/>Teste ok!");
+//		System.out.println("Terminado o envio de e-mail!");
+//	}
 	
 	public void enviarEmail(String remetente, List<String> destinatarios, 
 			String assunto, String mensagem) {

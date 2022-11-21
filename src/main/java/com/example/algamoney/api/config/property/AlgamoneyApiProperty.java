@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component;
 
 @ConfigurationProperties("algamoney")
-@EnableConfigurationProperties(AlgamoneyApiProperty.class)
 @Component
 public class AlgamoneyApiProperty {
 	
