@@ -17,20 +17,20 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Table(name = "pessoa")
 @Entity
+@Table(name = "pessoa")
 public class Pessoa {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@NotNull
 	private String nome;
-	
+
 	@Embedded
 	private Endereco endereco;
-	
+
 	@NotNull
 	private Boolean ativo;
 	
@@ -71,12 +71,20 @@ public class Pessoa {
 		this.ativo = ativo;
 	}
 	
+	public List<Contato> getContatos() {
+		return contatos;
+	}
+	
+	public void setContatos(List<Contato> contatos) {
+		this.contatos = contatos;
+	}
+	
 	@JsonIgnore
 	@Transient
 	public boolean isInativo() {
 		return !this.ativo;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -101,4 +109,5 @@ public class Pessoa {
 			return false;
 		return true;
 	}
+	
 }
