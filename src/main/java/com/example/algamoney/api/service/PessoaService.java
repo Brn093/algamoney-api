@@ -19,16 +19,13 @@ public class PessoaService {
 	private PessoaRepository pessoaRepository;
 	
 	public Pessoa salvar(Pessoa pessoa) {
-		Optional<Pessoa> pessoa1 = pessoaRepository.findById(pessoa.getId());
-
-        if(pessoa1.equals(null)) {
-            throw new PessoaInexistenteOuInativaException();
-        }
-        return pessoaRepository.save(pessoa);
+		pessoa.getContatos().forEach(c -> c.setPessoa(pessoa));
+		return pessoaRepository.save(pessoa);
 	}
 	
 	public Pessoa atualizar(Long id, Pessoa pessoa) {
 		Pessoa pessoaSalva = buscarPessoaPeloId(id);
+		pessoa.getContatos().forEach(c -> c.setPessoa(pessoa));
 		BeanUtils.copyProperties(pessoa, pessoaSalva, "id");
 		return pessoaRepository.save(pessoaSalva);
 	}
