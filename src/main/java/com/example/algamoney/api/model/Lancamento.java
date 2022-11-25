@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "lancamento")
@@ -43,6 +44,7 @@ public class Lancamento {
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
 	
+	@JsonIgnoreProperties("contatos")
 	@ManyToOne
 	@JoinColumn(name = "id_pessoa")
 	private Pessoa pessoa;
