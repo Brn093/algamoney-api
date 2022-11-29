@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
 import com.example.algamoney.api.mail.Mailer;
@@ -25,6 +26,7 @@ import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.PessoaRepository;
 import com.example.algamoney.api.repository.UsuarioRepository;
 import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
+import com.example.algamoney.api.storage.S3;
 
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -49,6 +51,9 @@ public class LancamentoService {
 	
 	@Autowired
 	private Mailer mailer;
+	
+	@Autowired
+	private S3 s3;
 	
 	@Scheduled(cron = "0 0 6 * * *")
 	//@Scheduled(fixedDelay = 1000 * 60 * 30)
@@ -100,9 +105,10 @@ public class LancamentoService {
 	}
 	
 	public Lancamento salvar(Lancamento lancamento) {
-		Optional<Pessoa> pessoa = pessoaRepository.findById(lancamento.getPessoa().getId());
-		if (pessoa.equals(null) || pessoa.get().isInativo()) {
-			throw new PessoaInexistenteOuInativaException();
+		validarPessoa(lancamento);
+		
+		if(StringUtils.hasText(lancamento.getAnexo())) {
+			s3.salvar(lancamento.getAnexo());
 		}
 		
 		return lancamentoRepository.save(lancamento);
