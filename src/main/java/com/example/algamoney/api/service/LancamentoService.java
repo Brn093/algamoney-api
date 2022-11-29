@@ -114,13 +114,23 @@ public class LancamentoService {
 		return lancamentoRepository.save(lancamento);
 	}
 
-	public Lancamento atualizar(Long id, Lancamento lancamento) {
-		Lancamento lancamentoSalvo = buscarLancamentoExistente(id);
+	public Lancamento atualizar(Long codigo, Lancamento lancamento) {
+		Lancamento lancamentoSalvo = buscarLancamentoExistente(codigo);
 		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
 			validarPessoa(lancamento);
 		}
+		
+		if (!StringUtils.hasLength(lancamento.getAnexo())
+				&& StringUtils.hasText(lancamentoSalvo.getAnexo())) {
+			s3.remover(lancamentoSalvo.getAnexo());
+		} else if (StringUtils.hasLength(lancamento.getAnexo())
+				&& !lancamento.getAnexo().equals(lancamentoSalvo.getAnexo())) {
+			s3.substituir(lancamentoSalvo.getAnexo(), lancamento.getAnexo());
+		}
+
 
 		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "id");
+
 
 		return lancamentoRepository.save(lancamentoSalvo);
 	}

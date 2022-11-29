@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -26,31 +27,36 @@ public class Lancamento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotNull
 	private String descricao;
-	
-	@Column(name = "data_vencimento")	
+
+	@NotNull
+	@Column(name = "data_vencimento")
 	private LocalDate dataVencimento;
-	
-	@Column(name = "data_pagamento")	
+
+	@Column(name = "data_pagamento")
 	private LocalDate dataPagamento;
-	
+
+	@NotNull
 	private BigDecimal valor;
-	
+
 	private String observacao;
-	
+
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
-	
+
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
-	
+
 	@JsonIgnoreProperties("contatos")
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "id_pessoa")
 	private Pessoa pessoa;
 	
-	@Transient
 	private String anexo;
 	
 	@Transient
